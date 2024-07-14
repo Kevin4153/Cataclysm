@@ -1,20 +1,44 @@
-const axios = require('axios');
+const OpenAI = require("openai");
 require('dotenv').config();
+const PROMPT_TEXT = require('./prompt');
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 const askChatGPT = async (ingredient) => {
-  const prompt = `Is ${ingredient} toxic to cats? rate it on a scale of 1 (not toxic) - 2 (mildly) - 3 (can be fatal). Also, make a list of symptoms associated with the intake of ${ingredient}. Format it so the list is [ "Symptom1", "Symptom2", etc.]. Choose symptoms from the following list: ...`;
-
-  const response = await axios.post('https://api.openai.com/v1/completions', {
-    model: 'text-davinci-003',
-    prompt: prompt,
-    max_tokens: 150
-  }, {
-    headers: {
-      'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-    }
+  const response = await openai.chat.completions.create({
+    model: "gpt-4o",
+    messages: [
+      {
+        role: "system",
+        content: [
+          {
+            type: "text",
+            text: PROMPT_TEXT
+          }
+        ]
+      },
+      {
+        role: "user",
+        content:  [
+          {
+            type: "text",
+            text: `Ingredient: ${ingredient}`
+          }
+        ]
+      }
+      
+    ],
+    temperature: 0,
+    max_tokens: 256,
+    top_p: 0,
+    frequency_penalty: 0,
+    presence_penalty: 0,
   });
 
-  return response.data.choices[0].text;
+  const parsedResponse = JSON.parse(response.choices[0].message.content);
+  return parsedResponse;
 };
 
 module.exports = { askChatGPT };
