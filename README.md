@@ -30,11 +30,13 @@ toxic-food-scanner/
 │   │   ├── api/
 │   │   │   ├── chatgpt.js
 │   │   │   ├── dynamodb.js
+│   │   │   ├── prompt.js
 │   │   │   └── usda.js
 │   │   ├── routes/
 │   │   │   ├── foodItemRoutes.js
 │   │   │   └── toxicityRoutes.js
 │   │   ├── utils/
+│   │   │   ├── createTable.js
 │   │   │   ├── parseChatGPTResponse.js
 │   │   │   └── findNearestVet.js
 │   │   └── server.js
