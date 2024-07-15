@@ -1,7 +1,8 @@
-const express = require('express');
-const { checkIngredientInDB, addIngredientToDB } = require('../api/dynamodb');
-const { askChatGPT } = require('../api/chatgpt');
-const { parseChatGPTResponse } = require('../utils/parseChatGPTResponse');
+import express from 'express';
+import { checkIngredientInDB, addIngredientToDB } from '../api/dynamodb.js';
+import askChatGPT from '../api/chatgpt.js';
+import parseChatGPTResponse from '../utils/parseChatGPTResponse.js';
+
 const router = express.Router();
 
 router.post('/', async (req, res) => {
@@ -9,11 +10,17 @@ router.post('/', async (req, res) => {
   let toxicityReport = [];
 
   for (const ingredient of ingredients) {
+    // console.log(ingredient)
     let toxicInfo = await checkIngredientInDB(ingredient);
     if (!toxicInfo) {
       const chatGPTResponse = await askChatGPT(ingredient);
       toxicInfo = parseChatGPTResponse(chatGPTResponse);
       await addIngredientToDB(ingredient, toxicInfo);
+      toxicInfo = {
+        ingredient,
+        ...toxicInfo
+      };
+      
     }
     toxicityReport.push(toxicInfo);
   }
@@ -21,4 +28,4 @@ router.post('/', async (req, res) => {
   res.json(toxicityReport);
 });
 
-module.exports = router;
+export default router;
