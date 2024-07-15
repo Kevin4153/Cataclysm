@@ -8,20 +8,30 @@ const App = () => {
   const [barcode, setBarcode] = useState(null);
   const [foodItem, setFoodItem] = useState(null);
   const [toxicityReport, setToxicityReport] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleBarcodeDetected = async (barcode) => {
     setBarcode(barcode);
+    setErrorMessage(null); // reset error message
     const foodItem = await fetchFoodItem(barcode);
-    setFoodItem(foodItem);
+    if (foodItem) {
+      setFoodItem(foodItem);
+      const report = await checkToxicity(foodItem.ingredients);
+      setToxicityReport(report);
+    } else {
+      setFoodItem(null);
+      setToxicityReport(null);
+      setErrorMessage('Food item not found. Please try another barcode.');
+    }
     
-    const report = await checkToxicity(foodItem.ingredients);
-    setToxicityReport(report);
+    
   };
 
   return (
     <div>
       <h1>Cat Toxicity Scanner</h1>
       <BarcodeScanner onBarcodeDetected={handleBarcodeDetected} />
+      {errorMessage && <p>{errorMessage}</p>}
       {foodItem && <FoodItemDetails foodItem={foodItem} />}
       {toxicityReport && <ToxicityReport report={toxicityReport} />}
       <button onClick={findNearestVet}>Find Nearest Emergency Vet</button>
