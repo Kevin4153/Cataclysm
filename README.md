@@ -128,3 +128,5 @@ toxic-food-scanner/
 3. View the food item details and toxicity report.
 4. Optionally, find the nearest emergency vet.
 
+## Design Doc
+https://docs.google.com/document/d/1q7fn5PRFuzf1-y79WDJ7F8Rr--BD-IV2VfOB7qS_tSo/edit?usp=sharing
