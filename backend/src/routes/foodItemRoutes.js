@@ -1,5 +1,6 @@
-const express = require('express');
-const { getFoodItem } = require('../api/usda');
+import express from 'express';
+import getFoodItem from '../api/usda.js';
+
 const router = express.Router();
 
 router.post('/', async (req, res) => {
@@ -12,4 +13,4 @@ router.post('/', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
