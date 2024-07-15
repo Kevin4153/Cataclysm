@@ -1,12 +1,10 @@
 /**
  * Parses the response from the OpenAI API.
- * @param {string} response - The raw response string from the API.
+ * @param {string} parsedResponse - The raw response string from the API.
  * @returns {object} - Parsed JSON object with toxicity information.
  */
-function parseChatGPTResponse(response) {
+function parseChatGPTResponse(parsedResponse) {
   try {
-    // Assuming the response is in JSON format
-    const parsedResponse = JSON.parse(response);
 
     // Extract necessary fields from the parsed response
     const toxicityLevel = parsedResponse["Toxicity Level"];
