@@ -7,6 +7,7 @@ const ToxicityReport = ({ report }) => (
       <div key={index}>
         <p>Ingredient: {item.ingredient}</p>
         <p>Toxicity Level: {item.toxicityLevel}</p>
+        <p>Toxicity Amount: {item.toxicityAmount}</p>
         <p>Symptoms: {item.symptoms.join(', ')}</p>
       </div>
     ))}
