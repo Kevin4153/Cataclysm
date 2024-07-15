@@ -1,6 +1,8 @@
-const OpenAI = require("openai");
-require('dotenv').config();
-const PROMPT_TEXT = require('./prompt');
+import OpenAI from "openai";
+import dotenv from "dotenv";
+import PROMPT_TEXT from './prompt.js';
+
+dotenv.config()
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -35,10 +37,12 @@ const askChatGPT = async (ingredient) => {
     top_p: 0,
     frequency_penalty: 0,
     presence_penalty: 0,
+    response_format: {type: "json_object"},
   });
 
   const parsedResponse = JSON.parse(response.choices[0].message.content);
+  // console.log(parsedResponse)
   return parsedResponse;
 };
 
-module.exports = { askChatGPT };
+export default askChatGPT;
