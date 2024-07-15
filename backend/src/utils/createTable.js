@@ -1,4 +1,4 @@
-import { DynamoDBClient, CreateTableCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, CreateTableCommand, DescribeTableCommand } from "@aws-sdk/client-dynamodb";
 
 const dbclient = new DynamoDBClient({ region: 'us-east-2' });
 
@@ -24,13 +24,26 @@ const input = {
   ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
 };
 
-const command = new CreateTableCommand(input);
-
-(async () => {
+const createTableIfNotExists = async () => {
   try {
-    const results = await dbclient.send(command);
-    console.log("Table created successfully:", results);
+    // Check if table exists
+    const describeCommand = new DescribeTableCommand({ TableName: input.TableName });
+    await dbclient.send(describeCommand);
+    console.log(`Table "${input.TableName}" already exists.`);
   } catch (err) {
-    console.error("Error creating table:", err);
+    if (err.name === 'ResourceNotFoundException') {
+      // Table does not exist, create it
+      const createCommand = new CreateTableCommand(input);
+      try {
+        const results = await dbclient.send(createCommand);
+        console.log("Table created successfully:", results);
+      } catch (createErr) {
+        console.error("Error creating table:", createErr);
+      }
+    } else {
+      console.error("Error describing table:", err);
+    }
   }
-})();
+};
+
+createTableIfNotExists();
