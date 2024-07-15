@@ -1,21 +1,21 @@
-const { DynamoDBClient, CreateTableCommand } = require("@aws-sdk/client-dynamodb");
+import { DynamoDBClient, CreateTableCommand } from "@aws-sdk/client-dynamodb";
 
 const dbclient = new DynamoDBClient({ region: 'us-east-2' });
 
 const input = {
   AttributeDefinitions: [
-    { AttributeName: "name", AttributeType: "S" },
-    { AttributeName: "toxicity-level", AttributeType: "N" }
+    { AttributeName: "ingredient", AttributeType: "S" },
+    { AttributeName: "toxicityLevel", AttributeType: "N" }
   ],
   TableName: "CatToxicityInfo",
   KeySchema: [
-    { AttributeName: "name", KeyType: "HASH" }
+    { AttributeName: "ingredient", KeyType: "HASH" }
   ],
   GlobalSecondaryIndexes: [
     {
       IndexName: "toxicity",
       KeySchema: [
-        { AttributeName: "toxicity-level", KeyType: "HASH" }
+        { AttributeName: "toxicityLevel", KeyType: "HASH" }
       ],
       Projection: { ProjectionType: "ALL" },
       ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
